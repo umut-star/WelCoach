@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WelCoach — Tu Coach IB de Weltrade</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #080c14;
+    color: #e8e6de;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: #0d1220;
+    border-bottom: 1px solid #1a2035;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 0 16px #0072ff44;
+  }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-text .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 700;
+    letter-spacing: -0.3px; color: #fff; line-height: 1;
+  }
+  .logo-text .brand span { color: #00c6ff; }
+  .logo-text .tagline { font-size: 11px; color: #4a5580; margin-top: 2px; letter-spacing: 0.3px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .online-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: #0d1220; border: 1px solid #1a2035;
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 11px; color: #3dd68c;
+  }
+  .online-dot {
+    width: 6px; height: 6px;
+    background: #3dd68c; border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .latam-badge {
+    background: #0d1220; border: 1px solid #1a2035;
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 11px; color: #7a85aa;
+  }
+
+  /* ── Chat area ── */
+  .chat-area {
+    flex: 1; overflow-y: auto;
+    padding: 28px 16px 16px;
+    display: flex; flex-direction: column; gap: 18px;
+    max-width: 780px; width: 100%; margin: 0 auto;
+  }
+  .chat-area::-webkit-scrollbar { width: 4px; }
+  .chat-area::-webkit-scrollbar-track { background: transparent; }
+  .chat-area::-webkit-scrollbar-thumb { background: #1a2035; border-radius: 4px; }
+
+  /* ── Welcome card ── */
+  .welcome-card {
+    background: linear-gradient(135deg, #0d1830, #0a1525);
+    border: 1px solid #1a2a4a; border-radius: 16px; padding: 24px; margin-bottom: 4px;
+  }
+  .welcome-card h2 { font-size: 17px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .welcome-card h2 span { color: #00c6ff; }
+  .welcome-card p { font-size: 13px; color: #7a85aa; line-height: 1.6; margin-bottom: 16px; }
+  .topic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .topic-btn {
+    background: #0d1220; border: 1px solid #1a2a4a; border-radius: 10px;
+    padding: 10px 14px; cursor: pointer; text-align: left;
+    transition: all .18s; display: flex; align-items: flex-start; gap: 8px;
+  }
+  .topic-btn:hover {
+    background: #111827; border-color: #00c6ff44;
+    box-shadow: 0 0 12px #00c6ff11;
+  }
+  .topic-btn .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .topic-btn .text { display: flex; flex-direction: column; gap: 2px; }
+  .topic-btn .text strong { font-size: 12px; font-weight: 600; color: #c8d0e8; }
+  .topic-btn .text span { font-size: 11px; color: #4a5580; }
+
+  /* ── Messages ── */
+  .msg { display: flex; gap: 10px; animation: fadeIn .22s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+  .msg.user { flex-direction: row-reverse; }
+  .av {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .av.ai { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 0 10px #0072ff33; font-size: 16px; }
+  .av.user { background: #1a2035; font-size: 13px; }
+  .bubble { max-width: 72%; padding: 12px 16px; font-size: 14px; line-height: 1.7; border-radius: 12px; }
+  .msg.ai .bubble {
+    background: #0d1525; border: 1px solid #1a2a40;
+    border-radius: 4px 12px 12px 12px; color: #c8d0e8;
+  }
+  .msg.user .bubble {
+    background: linear-gradient(135deg, #0072ff, #0050cc);
+    border-radius: 12px 4px 12px 12px; color: #fff;
+    box-shadow: 0 4px 16px #0072ff22;
+  }
+  .bubble strong { color: #00c6ff; font-weight: 600; }
+  .bubble br + br { display: block; content: ""; margin-top: 4px; }
+
+  /* ── Typing ── */
+  .typing-wrap { display: none; max-width: 780px; margin: 0 auto; width: 100%; padding: 0 16px 4px; }
+  .typing-inner { display: flex; gap: 10px; align-items: center; }
+  .typing-bubble {
+    background: #0d1525; border: 1px solid #1a2a40;
+    border-radius: 4px 12px 12px 12px;
+    padding: 11px 16px; display: flex; gap: 5px; align-items: center;
+  }
+  .typing-bubble span {
+    width: 6px; height: 6px; background: #4a5580; border-radius: 50%;
+    animation: bounce .85s infinite;
+  }
+  .typing-bubble span:nth-child(2) { animation-delay: .14s; }
+  .typing-bubble span:nth-child(3) { animation-delay: .28s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+  /* ── Quick replies ── */
+  .quick-replies {
+    max-width: 780px; margin: 0 auto; width: 100%;
+    padding: 0 16px 10px; display: flex; flex-wrap: wrap; gap: 7px;
+  }
+  .qr-btn {
+    background: #0d1220; border: 1px solid #1a2035; color: #7a85aa;
+    font-size: 12px; padding: 6px 13px; border-radius: 20px; cursor: pointer; transition: all .15s;
+  }
+  .qr-btn:hover { border-color: #00c6ff44; color: #00c6ff; background: #0d1525; }
+
+  /* ── Error banner ── */
+  .error-banner {
+    display: none; max-width: 780px; margin: 0 auto 8px; width: 100%; padding: 0 16px;
+  }
+  .error-inner {
+    background: #1a0a0a; border: 1px solid #ff4444; border-radius: 10px;
+    padding: 10px 14px; font-size: 12px; color: #ff8888; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── Input ── */
+  .input-area {
+    background: #0d1220; border-top: 1px solid #1a2035; padding: 14px 16px;
+  }
+  .input-wrap { max-width: 780px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; }
+  textarea {
+    flex: 1; background: #080c14; border: 1px solid #1a2035;
+    border-radius: 10px; color: #e8e6de; font-size: 14px;
+    line-height: 1.5; padding: 11px 14px; resize: none; outline: none;
+    min-height: 44px; max-height: 120px; font-family: inherit; transition: border-color .15s;
+  }
+  textarea:focus { border-color: #0072ff66; }
+  textarea::placeholder { color: #2a3050; }
+  .send-btn {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border: none; border-radius: 10px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .15s; flex-shrink: 0; box-shadow: 0 4px 14px #0072ff33;
+  }
+  .send-btn:hover { opacity: .85; }
+  .send-btn:disabled { opacity: .3; cursor: not-allowed; box-shadow: none; }
+  .send-btn svg { width: 18px; height: 18px; fill: #fff; }
+  .footer-note {
+    text-align: center; font-size: 11px; color: #2a3050; margin-top: 8px;
+    max-width: 780px; margin-left: auto; margin-right: auto; letter-spacing: 0.2px;
+  }
+  .footer-note span { color: #00c6ff; font-weight: 600; }
+
+  @media (max-width: 480px) {
+    .topic-grid { grid-template-columns: 1fr; }
+    .bubble { max-width: 85%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-wrap">
+    <div class="logo-icon">🏆</div>
+    <div class="logo-text">
+      <div class="brand">Wel<span>Coach</span></div>
+      <div class="tagline">Tu coach estratégico IB · Weltrade</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="latam-badge">🌎 Latinoamérica</div>
+    <div class="online-badge">
+      <div class="online-dot"></div>
+      En línea
+    </div>
+  </div>
+</div>
+
+<div class="chat-area" id="chatArea">
+  <div class="welcome-card">
+    <h2>Hola, soy <span>WelCoach</span> 👋</h2>
+    <p>Tu asistente estratégico para hacer crecer tu negocio IB con Weltrade. Dime qué desafío tienes hoy y te doy pasos concretos para resolverlo.</p>
+    <div class="topic-grid">
+      <button class="topic-btn" onclick="fillInput('Tengo muchos traders inactivos en mi comunidad, ¿qué puedo hacer?')">
+        <span class="icon">💤</span>
+        <div class="text"><strong>Traders inactivos</strong><span>Estrategias de reactivación</span></div>
+      </button>
+      <button class="topic-btn" onclick="fillInput('¿Cómo puedo reclutar nuevos IB partners en mi región?')">
+        <span class="icon">🎯</span>
+        <div class="text"><strong>Reclutar IB</strong><span>Captación de nuevos partners</span></div>
+      </button>
+      <button class="topic-btn" onclick="fillInput('Dame ideas para un webinar con mis traders esta semana')">
+        <span class="icon">📊</span>
+        <div class="text"><strong>Webinar & contenido</strong><span>Ideas y estructura</span></div>
+      </button>
+      <button class="topic-btn" onclick="fillInput('Dame un mensaje de WhatsApp para enviar a un trader inactivo')">
+        <span class="icon">✉️</span>
+        <div class="text"><strong>Mensajes 1 a 1</strong><span>Listos para copiar y pegar</span></div>
+      </button>
+      <button class="topic-btn" onclick="fillInput('¿Cómo compito contra brokers más conocidos en mi zona?')">
+        <span class="icon">⚔️</span>
+        <div class="text"><strong>Frente a la competencia</strong><span>Argumentos y ventajas</span></div>
+      </button>
+      <button class="topic-btn" onclick="fillInput('¿Qué estrategia uso para crecer en redes sociales como IB?')">
+        <span class="icon">📱</span>
+        <div class="text"><strong>Redes sociales</strong><span>Instagram, TikTok, YouTube</span></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="quick-replies" id="quickReplies">
+  <button class="qr-btn" onclick="fillInput('¿Cómo logro el primer depósito de un nuevo trader?')">💰 Primer depósito</button>
+  <button class="qr-btn" onclick="fillInput('¿Qué bonos de Weltrade puedo usar para atraer traders?')">🎁 Bonos Weltrade</button>
+  <button class="qr-btn" onclick="fillInput('Necesito un plan de acción para esta semana')">📋 Plan semanal</button>
+  <button class="qr-btn" onclick="fillInput('¿Cómo explico el Copy Trading a un trader nuevo?')">🔄 Explicar Copy Trading</button>
+</div>
+
+<div class="error-banner" id="errorBanner">
+  <div class="error-inner">⚠️ <span id="errorMsg">Ocurrió un error. Intenta de nuevo.</span></div>
+</div>
+
+<div class="typing-wrap" id="typingWrap">
+  <div class="typing-inner">
+    <div class="av ai">🏆</div>
+    <div class="typing-bubble"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<div class="input-area">
+  <div class="input-wrap">
+    <textarea id="userInput" placeholder="Escribe tu pregunta o situación..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="footer-note"><span>WelCoach</span> · Powered by Weltrade IB Partner Program · Latinoamérica</div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `Eres WelCoach, el coach estratégico oficial para los partners IB (Introducing Brokers) de Weltrade en Latinoamérica.
+
+Tu personalidad: profesional pero cercano, directo, motivador. Hablas como un coach de negocios experimentado, no como un bot genérico.
+
+Lo que sabes sobre Weltrade:
+- Broker internacional desde 2006, 1M+ traders, 10.000+ partners en 40+ países
+- MT4/MT5, Copy Trading, apalancamiento hasta 1:1000
+- Cuentas: Micro ($1), Premium ($25), Pro ($500)
+- Comisiones IB: CPA + volumen de trading
+- "Best Forex Broker Latam 2024"
+- Retiros en 30 min, bonos, materiales educativos para partners
+
+Cómo respondes:
+- SIEMPRE en español latinoamericano, tono cálido y directo
+- Máximo 4-5 puntos accionables por respuesta — ¿qué hace el IB HOY?
+- Si piden mensaje de WhatsApp/Telegram: redacta el texto COMPLETO entre comillas, listo para copiar, tono humano y natural (no robótico)
+- Integra ventajas de Weltrade cuando sea relevante
+- Si mencionan país o tamaño de comunidad, adapta la respuesta
+- Usa emojis con moderación para dar energía
+
+PROHIBIDO: consejos de inversión, trades específicos, garantías de ganancias.`;
+
+const history = [];
+
+function fillInput(text) {
+  const el = document.getElementById('userInput');
+  el.value = text;
+  autoResize(el);
+  el.focus();
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function showError(msg) {
+  const banner = document.getElementById('errorBanner');
+  document.getElementById('errorMsg').textContent = msg;
+  banner.style.display = 'block';
+  setTimeout(() => { banner.style.display = 'none'; }, 6000);
+}
+
+function addMsg(role, html) {
+  const area = document.getElementById('chatArea');
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+  const av = document.createElement('div');
+  av.className = `av ${role}`;
+  av.textContent = role === 'ai' ? '🏆' : '👤';
+  const bub = document.createElement('div');
+  bub.className = 'bubble';
+  bub.innerHTML = html;
+  wrap.appendChild(av);
+  wrap.appendChild(bub);
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
+}
+
+function fmt(t) {
+  return t
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const btn = document.getElementById('sendBtn');
+  const tw = document.getElementById('typingWrap');
+  const text = input.value.trim();
+  if (!text || btn.disabled) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  btn.disabled = true;
+
+  addMsg('user', text);
+  history.push({ role: 'user', content: text });
+  document.getElementById('quickReplies').style.display = 'none';
+
+  tw.style.display = 'block';
+  document.getElementById('chatArea').scrollTop = 99999;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: history
+      })
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      const errMsg = errData?.error?.message || `HTTP ${res.status}`;
+      throw new Error(errMsg);
+    }
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'No pude generar una respuesta. Intenta de nuevo.';
+    history.push({ role: 'assistant', content: reply });
+    tw.style.display = 'none';
+    addMsg('ai', fmt(reply));
+
+  } catch (err) {
+    tw.style.display = 'none';
+    console.error('WelCoach API error:', err);
+
+    const msg = err.message || '';
+    if (msg.includes('401') || msg.toLowerCase().includes('auth')) {
+      showError('API key inválida o faltante. Verifica tu configuración.');
+    } else if (msg.includes('429')) {
+      showError('Demasiadas solicitudes. Espera unos segundos y vuelve a intentarlo.');
+    } else if (msg.includes('529') || msg.toLowerCase().includes('overload')) {
+      showError('El servicio está ocupado ahora. Intenta en unos segundos.');
+    } else if (msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network')) {
+      showError('Error de red. Verifica tu conexión a internet.');
+    } else {
+      showError('Ocurrió un error inesperado. Intenta de nuevo.');
+    }
+
+    addMsg('ai', '⚠️ No pude procesar tu mensaje en este momento. Intenta de nuevo en unos segundos.');
+  }
+
+  btn.disabled = false;
+  input.focus();
+}
+</script>
+</body>
+</html>
